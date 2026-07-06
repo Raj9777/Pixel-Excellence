@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>About — PIXE | Our Story & Team</title>
+  <meta name="description" content="Learn about PIXE — a web design and custom software agency passionate about building digital products that drive real business growth."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    body { padding-top: var(--nav-h); }
+
+    /* Stats bar */
+    .stats-bar {
+      display:grid; grid-template-columns:repeat(4,1fr); gap:0;
+      border:1px solid var(--border); border-radius:4px; overflow:hidden;
+    }
+    @media(max-width:640px){ .stats-bar{ grid-template-columns:repeat(2,1fr); } }
+    .stat-item {
+      padding:40px 36px; border-right:1px solid var(--border);
+      text-align:center;
+    }
+    .stat-item:last-child { border-right:none; }
+    .stat-num { font-family:var(--mono); font-size:2.8rem; font-weight:700; color:var(--accent); line-height:1; margin-bottom:8px; }
+    .stat-label { font-family:var(--mono); font-size:11px; letter-spacing:.15em; text-transform:uppercase; color:var(--text-muted); }
+
+    /* Values */
+    .values-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:2px; }
+    @media(max-width:640px){ .values-grid{ grid-template-columns:1fr; } }
+    .value-card {
+      background:var(--surface); padding:48px 40px;
+      border:1px solid var(--border);
+      transition:border-color .3s;
+    }
+    .value-card:hover { border-color:var(--border-hover); }
+    .value-icon { font-size:36px; margin-bottom:16px; }
+    .value-title { font-family:var(--mono); font-size:1.1rem; font-weight:700; color:var(--text); margin-bottom:12px; }
+    .value-desc { font-size:.9rem; color:var(--text-muted); line-height:1.75; }
+
+    /* Process timeline */
+    .process-list { display:flex; flex-direction:column; gap:0; }
+    .process-item {
+      display:grid; grid-template-columns:80px 1fr; gap:32px; align-items:flex-start;
+      padding:40px 0; border-bottom:1px solid var(--border);
+    }
+    .process-item:last-child { border-bottom:none; }
+    .process-step-num {
+      font-family:var(--mono); font-size:3rem; font-weight:700;
+      color:rgba(0,255,224,.12); line-height:1; padding-top:4px;
+    }
+    .process-step-title { font-family:var(--mono); font-size:1.1rem; font-weight:600; color:var(--text); margin-bottom:10px; }
+    .process-step-desc { font-size:.9rem; color:var(--text-muted); line-height:1.75; }
+
+    /* Team grid */
+    .team-grid { display:grid; grid-template-columns:repeat(4,1fr); gap:20px; }
+    @media(max-width:900px){ .team-grid{ grid-template-columns:repeat(2,1fr); } }
+    @media(max-width:480px){ .team-grid{ grid-template-columns:1fr; } }
+    .team-card {
+      background:var(--surface); border:1px solid var(--border); border-radius:4px;
+      padding:32px 28px; text-align:center;
+      transition:border-color .3s, transform .3s;
+    }
+    .team-card:hover { border-color:var(--border-hover); transform:translateY(-4px); }
+    .team-avatar {
+      width:80px; height:80px; border-radius:50%;
+      background:var(--surface-high); border:2px solid rgba(0,255,224,.2);
+      display:flex; align-items:center; justify-content:center;
+      font-size:36px; margin:0 auto 16px;
+    }
+    .team-name { font-family:var(--mono); font-size:.95rem; font-weight:700; color:var(--text); margin-bottom:4px; }
+    .team-role { font-family:var(--mono); font-size:11px; letter-spacing:.1em; text-transform:uppercase; color:var(--accent); margin-bottom:12px; }
+    .team-bio { font-size:.82rem; color:var(--text-muted); line-height:1.65; }
+
+    /* Mission block */
+    .mission-block {
+      background:var(--surface); border:1px solid var(--border); border-radius:4px;
+      padding:64px; position:relative; overflow:hidden;
+    }
+    .mission-block::before {
+      content:'"'; font-family:var(--mono); font-size:180px; font-weight:900;
+      color:rgba(0,255,224,.04); position:absolute; top:-40px; left:32px;
+      line-height:1; pointer-events:none; user-select:none;
+    }
+    @media(max-width:768px){ .mission-block{ padding:36px 28px; } }
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<header id="site-header">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">PIXE</a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a><a href="services.html">Services</a>
+      <a href="portfolio.html">Work</a><a href="about.html" class="active">About</a><a href="contact.html">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="nav-ghost" onclick="location.href='contact.html'">Let's Talk</button>
+      <button class="btn-primary btn-sm" onclick="location.href='contact.html'">Get a Quote</button>
+    </div>
+    <div class="nav-hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+  </div>
+</header>
+<div id="mobile-menu">
+  <a href="index.html">Home</a><a href="services.html">Services</a>
+  <a href="portfolio.html">Work</a><a href="about.html" class="active">About</a><a href="contact.html">Contact</a>
+</div>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="container page-hero-inner">
+    <p class="label reveal">Our Story</p>
+    <h1 class="heading-xl reveal" style="max-width:700px;margin-bottom:20px;">
+      We exist to make <span class="accent-text">technology</span><br/>work for your business.
+    </h1>
+    <p class="body-lg reveal" style="max-width:560px;">
+      PIXE was founded on a simple belief: every business — no matter its size — deserves digital products that are fast, beautiful, and actually drive growth.
+    </p>
+  </div>
+</section>
+
+<!-- STATS -->
+<section style="background:var(--bg-dim);padding:64px 0;">
+  <div class="container">
+    <div class="stats-bar reveal">
+      <div class="stat-item"><div class="stat-num">50+</div><div class="stat-label">Projects Delivered</div></div>
+      <div class="stat-item"><div class="stat-num">35+</div><div class="stat-label">Happy Clients</div></div>
+      <div class="stat-item"><div class="stat-num">3+</div><div class="stat-label">Years of Experience</div></div>
+      <div class="stat-item"><div class="stat-num">98%</div><div class="stat-label">Client Satisfaction</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- MISSION -->
+<section style="background:var(--bg);">
+  <div class="container section-pad">
+    <div class="mission-block reveal">
+      <p class="label">Our Mission</p>
+      <h2 class="heading-lg" style="max-width:680px;margin-bottom:20px;position:relative;z-index:1;">
+        "To build digital products so good, they become our clients' most valuable business assets."
+      </h2>
+      <p class="body-lg" style="max-width:620px;position:relative;z-index:1;">
+        We're not a click-and-template agency. Every website and software product we build is hand-crafted for the specific business, audience, and goal it serves. We measure success in one currency: results for our clients.
+      </p>
+    </div>
+  </div>
+</section>
+
+<!-- VALUES -->
+<section style="background:var(--bg-dim);">
+  <div class="container section-pad">
+    <div class="reveal" style="margin-bottom:48px;">
+      <p class="label">Core Values</p>
+      <h2 class="heading-lg">What we stand for.</h2>
+    </div>
+    <div class="values-grid">
+      <div class="value-card reveal">
+        <div class="value-icon">🎯</div>
+        <div class="value-title">Results Over Vanity</div>
+        <div class="value-desc">We care about metrics that move your business — leads, revenue, retention — not just how pretty a design looks on Dribbble. Every decision we make is guided by its impact on your bottom line.</div>
+      </div>
+      <div class="value-card reveal" style="transition-delay:.08s">
+        <div class="value-icon">🔍</div>
+        <div class="value-title">Radical Transparency</div>
+        <div class="value-desc">No hidden costs. No jargon. No surprises. You'll always know exactly where your project stands, what's been built, and what comes next. We believe that trust is built through honest communication.</div>
+      </div>
+      <div class="value-card reveal" style="transition-delay:.16s">
+        <div class="value-icon">⚡</div>
+        <div class="value-title">Speed with Quality</div>
+        <div class="value-desc">We ship fast without cutting corners. Our agile process delivers working software in weeks, not months — with rigorous QA built into every sprint so quality is never sacrificed for speed.</div>
+      </div>
+      <div class="value-card reveal" style="transition-delay:.24s">
+        <div class="value-icon">🤝</div>
+        <div class="value-title">Long-Term Partnership</div>
+        <div class="value-desc">We don't disappear after delivery. Our best client relationships are measured in years, not projects. We grow as your business grows and are always just a message away when you need us.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW WE WORK -->
+<section style="background:var(--bg);">
+  <div class="container section-pad">
+    <div class="reveal" style="margin-bottom:48px;">
+      <p class="label">Our Process</p>
+      <h2 class="heading-lg">How every project <span class="accent-text">works</span>.</h2>
+    </div>
+    <div class="process-list reveal">
+      <div class="process-item">
+        <div class="process-step-num">01</div>
+        <div>
+          <div class="process-step-title">Discovery Call (Free)</div>
+          <div class="process-step-desc">We start with a 30-minute call to understand your business, goals, audience, and budget. No sales pitch — just an honest conversation about what you need and whether we're the right fit.</div>
+        </div>
+      </div>
+      <div class="process-item">
+        <div class="process-step-num">02</div>
+        <div>
+          <div class="process-step-title">Proposal & Scoping</div>
+          <div class="process-step-desc">We deliver a detailed project proposal within 48 hours — including scope, timeline, team, and a fixed quote. We define success metrics upfront so both sides know exactly what winning looks like.</div>
+        </div>
+      </div>
+      <div class="process-item">
+        <div class="process-step-num">03</div>
+        <div>
+          <div class="process-step-title">Design & Prototype</div>
+          <div class="process-step-desc">Our designers build wireframes and high-fidelity Figma prototypes for your review before development starts. You approve every screen — so there are no surprises in the final product.</div>
+        </div>
+      </div>
+      <div class="process-item">
+        <div class="process-step-num">04</div>
+        <div>
+          <div class="process-step-title">Build & Test</div>
+          <div class="process-step-desc">Development happens in weekly sprints. You review working builds at each milestone. Our QA team tests every feature on every device before it's considered complete.</div>
+        </div>
+      </div>
+      <div class="process-item">
+        <div class="process-step-num">05</div>
+        <div>
+          <div class="process-step-title">Launch & Beyond</div>
+          <div class="process-step-desc">We handle deployment, domain setup, and final QA. Then we monitor your product post-launch and provide support. Most clients stay with us for ongoing maintenance, new features, and growth initiatives.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TEAM -->
+<section style="background:var(--bg-dim);">
+  <div class="container section-pad">
+    <div class="reveal" style="margin-bottom:48px;">
+      <p class="label">The Team</p>
+      <h2 class="heading-lg">People behind the products.</h2>
+    </div>
+    <div class="team-grid">
+      <div class="team-card reveal">
+        <div class="team-avatar">👨‍💻</div>
+        <div class="team-name">Arjun Mehta</div>
+        <div class="team-role">Founder & Lead Dev</div>
+        <div class="team-bio">Full-stack engineer with 6+ years building SaaS products. Loves clean architecture and fast load times.</div>
+      </div>
+      <div class="team-card reveal" style="transition-delay:.08s">
+        <div class="team-avatar">👩‍🎨</div>
+        <div class="team-name">Priya Nair</div>
+        <div class="team-role">Head of Design</div>
+        <div class="team-bio">UI/UX designer with a background in brand strategy. Obsessed with interfaces that feel effortless.</div>
+      </div>
+      <div class="team-card reveal" style="transition-delay:.16s">
+        <div class="team-avatar">👨‍💼</div>
+        <div class="team-name">Karan Bose</div>
+        <div class="team-role">Project Manager</div>
+        <div class="team-bio">Keeps every project on track, on time, and on budget. Your direct point of contact from kickoff to launch.</div>
+      </div>
+      <div class="team-card reveal" style="transition-delay:.24s">
+        <div class="team-avatar">👩‍💻</div>
+        <div class="team-name">Sneha Rao</div>
+        <div class="team-role">Backend Engineer</div>
+        <div class="team-bio">Specialises in scalable APIs and database architecture. Has shipped software that handles millions of requests.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="background:var(--bg);padding:80px 0;">
+  <div class="container">
+    <div style="text-align:center;" class="reveal">
+      <p class="label">Work With Us</p>
+      <h2 class="heading-lg" style="margin-bottom:16px;">Ready to work with a team<br/>that <span class="accent-text">cares about results</span>?</h2>
+      <p class="body-lg" style="max-width:440px;margin:0 auto 40px;">Book a free discovery call. No obligation, just an honest conversation about your project.</p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-primary" onclick="location.href='contact.html'">Book a Free Call →</button>
+        <button class="btn-secondary" onclick="location.href='portfolio.html'">See Our Work</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><div class="footer-brand-logo">PIXE</div><p>We build websites and custom software that help businesses grow faster, work smarter, and stand out digitally.</p><div class="footer-socials"><div class="social-btn">𝕏</div><div class="social-btn">in</div><div class="social-btn">✉</div></div></div>
+      <div class="footer-col"><p class="footer-col-title">Services</p><nav><a href="services.html">Web Design</a><a href="services.html">Custom Software</a><a href="services.html">Mobile Apps</a><a href="services.html">E-commerce</a><a href="services.html">Automation</a></nav></div>
+      <div class="footer-col"><p class="footer-col-title">Company</p><nav><a href="about.html">About Us</a><a href="portfolio.html">Our Work</a><a href="contact.html">Careers</a><a href="contact.html">Contact</a></nav></div>
+      <div class="footer-col"><p class="footer-col-title">Legal</p><nav><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Cookie Policy</a></nav></div>
+    </div>
+    <div class="footer-bottom"><p>© 2025 PIXE Digital. All rights reserved.</p><div class="status-dot">All systems operational</div></div>
+  </div>
+</footer>
+
+<script>
+const io=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('visible');io.unobserve(x.target);}});},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+const hdr=document.getElementById('site-header');
+window.addEventListener('scroll',()=>hdr.classList.toggle('scrolled',window.scrollY>20),{passive:true});
+window.addEventListener('scroll',()=>{document.getElementById('progress-bar').style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';},{passive:true});
+function toggleMenu(){ document.getElementById('mobile-menu').classList.toggle('open'); }
+</script>
+</body>
+</html>

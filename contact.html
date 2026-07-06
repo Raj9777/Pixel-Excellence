@@ -1,0 +1,592 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Contact — PIXE | Start a Project or Book a Call</title>
+  <meta name="description" content="Get in touch with PIXE to start your web design or custom software project. Book a free discovery call or send us a message."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    body { padding-top: var(--nav-h); }
+
+    /* ── CONTACT LAYOUT ── */
+    .contact-layout {
+      display:grid; grid-template-columns:1fr 1fr; gap:0;
+      min-height:calc(100vh - var(--nav-h));
+    }
+    @media(max-width:900px){ .contact-layout{ grid-template-columns:1fr; } }
+
+    /* ── LEFT PANEL — FORM ── */
+    .contact-form-panel {
+      background:var(--bg); padding:72px 64px;
+      border-right:1px solid var(--border);
+    }
+    @media(max-width:900px){ .contact-form-panel{ border-right:none; border-bottom:1px solid var(--border); } }
+    @media(max-width:768px){ .contact-form-panel{ padding:48px 20px; } }
+
+    .form-group { display:flex; flex-direction:column; gap:8px; margin-bottom:20px; }
+    .form-group label {
+      font-family:var(--mono); font-size:11px; font-weight:500;
+      letter-spacing:.12em; text-transform:uppercase; color:var(--text-muted);
+    }
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+      background:var(--surface); border:1px solid var(--border); color:var(--text);
+      font-family:var(--sans); font-size:.9rem; padding:14px 18px;
+      border-radius:2px; outline:none;
+      transition:border-color .2s, box-shadow .2s;
+      width:100%;
+    }
+    .form-group input:focus,
+    .form-group select:focus,
+    .form-group textarea:focus {
+      border-color:var(--accent);
+      box-shadow:0 0 0 3px rgba(0,255,224,.08);
+    }
+    .form-group input::placeholder,
+    .form-group textarea::placeholder { color:rgba(255,255,255,.2); }
+    .form-group select { appearance:none; cursor:pointer; }
+    .form-group select option { background:var(--surface); }
+    .form-group textarea { resize:vertical; min-height:120px; }
+
+    .form-row { display:grid; grid-template-columns:1fr 1fr; gap:16px; }
+    @media(max-width:480px){ .form-row{ grid-template-columns:1fr; } }
+
+    .form-submit {
+      width:100%; justify-content:center; margin-top:8px;
+      font-size:13px; padding:16px;
+    }
+
+    /* Success state */
+    #form-success {
+      display:none; text-align:center; padding:40px 20px;
+      animation: fadeUp .5s ease;
+    }
+    #form-success .success-icon { font-size:48px; margin-bottom:16px; }
+    #form-success h3 { font-family:var(--mono); font-size:1.3rem; font-weight:700; color:var(--accent); margin-bottom:12px; }
+    #form-success p { color:var(--text-muted); font-size:.9rem; line-height:1.7; }
+
+    /* Info cards */
+    .info-cards { display:flex; flex-direction:column; gap:16px; margin-top:40px; }
+    .info-card {
+      display:flex; align-items:flex-start; gap:16px;
+      background:var(--surface); border:1px solid var(--border); border-radius:4px;
+      padding:20px 24px; transition:border-color .2s;
+    }
+    .info-card:hover { border-color:var(--border-hover); }
+    .info-icon { font-size:22px; flex-shrink:0; margin-top:2px; }
+    .info-label { font-family:var(--mono); font-size:10px; letter-spacing:.15em; text-transform:uppercase; color:var(--text-muted); margin-bottom:4px; }
+    .info-value { font-family:var(--mono); font-size:.9rem; font-weight:600; color:var(--text); }
+
+    /* ── RIGHT PANEL — CALENDAR ── */
+    .contact-calendar-panel {
+      background:var(--bg-dim); padding:72px 56px;
+    }
+    @media(max-width:768px){ .contact-calendar-panel{ padding:48px 20px; } }
+
+    /* Tabs */
+    .panel-tabs { display:flex; gap:0; border:1px solid var(--border); border-radius:2px; overflow:hidden; margin-bottom:40px; }
+    .panel-tab {
+      flex:1; font-family:var(--mono); font-size:11px; font-weight:600;
+      letter-spacing:.1em; text-transform:uppercase; color:var(--text-muted);
+      background:transparent; border:none; padding:12px 8px; cursor:pointer;
+      transition:all .2s; border-right:1px solid var(--border);
+    }
+    .panel-tab:last-child { border-right:none; }
+    .panel-tab.active { background:var(--accent); color:#07090f; }
+
+    /* Calendar widget */
+    #cal-panel { display:block; }
+    #msg-panel { display:none; }
+
+    .cal-header {
+      display:flex; align-items:center; justify-content:space-between;
+      margin-bottom:20px;
+    }
+    .cal-month-label { font-family:var(--mono); font-size:1rem; font-weight:700; color:var(--text); }
+    .cal-nav { display:flex; gap:8px; }
+    .cal-nav-btn {
+      width:34px; height:34px; border:1px solid var(--border); border-radius:2px;
+      background:var(--surface); color:var(--text-muted); font-size:14px;
+      cursor:pointer; display:flex; align-items:center; justify-content:center;
+      transition:all .2s;
+    }
+    .cal-nav-btn:hover { border-color:var(--accent); color:var(--accent); }
+
+    .cal-weekdays {
+      display:grid; grid-template-columns:repeat(7,1fr);
+      gap:4px; margin-bottom:8px;
+    }
+    .cal-weekday { font-family:var(--mono); font-size:10px; letter-spacing:.08em; text-transform:uppercase; color:rgba(255,255,255,.25); text-align:center; padding:4px 0; }
+
+    .cal-days { display:grid; grid-template-columns:repeat(7,1fr); gap:4px; }
+    .cal-day {
+      aspect-ratio:1; display:flex; align-items:center; justify-content:center;
+      font-family:var(--mono); font-size:13px; color:var(--text-muted);
+      border-radius:2px; cursor:pointer; border:1px solid transparent;
+      transition:all .15s; user-select:none;
+    }
+    .cal-day:hover:not(.disabled):not(.empty) { border-color:var(--border-hover); color:var(--accent); background:var(--accent-dim); }
+    .cal-day.selected { background:var(--accent); color:#07090f; font-weight:700; border-color:var(--accent); }
+    .cal-day.today { border-color:rgba(0,255,224,.3); color:var(--accent); }
+    .cal-day.disabled { opacity:.25; cursor:not-allowed; }
+    .cal-day.empty { cursor:default; }
+
+    /* Time slots */
+    .time-section { margin-top:28px; }
+    .time-label { font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--text-muted); margin-bottom:12px; }
+    .time-slots { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; }
+    .time-slot {
+      font-family:var(--mono); font-size:12px; font-weight:500;
+      background:var(--surface); border:1px solid var(--border); color:var(--text-muted);
+      padding:10px 6px; border-radius:2px; cursor:pointer; text-align:center;
+      transition:all .15s;
+    }
+    .time-slot:hover { border-color:var(--border-hover); color:var(--accent); }
+    .time-slot.selected { background:var(--accent-dim); border-color:var(--accent); color:var(--accent); }
+    .time-slot.booked { opacity:.3; cursor:not-allowed; text-decoration:line-through; }
+
+    /* Booking form */
+    .book-form { margin-top:28px; display:none; animation:fadeUp .4s ease; }
+    .book-form.visible { display:block; }
+
+    /* Confirm success */
+    #cal-success { display:none; text-align:center; padding:32px 0; animation:fadeUp .5s ease; }
+    #cal-success .cal-success-icon { font-size:48px; margin-bottom:16px; }
+    #cal-success h3 { font-family:var(--mono); font-size:1.2rem; font-weight:700; color:var(--accent); margin-bottom:10px; }
+    #cal-success p { color:var(--text-muted); font-size:.9rem; line-height:1.7; }
+    #cal-booked-time { font-family:var(--mono); color:var(--accent); font-weight:600; }
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<header id="site-header">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">PIXE</a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a><a href="services.html">Services</a>
+      <a href="portfolio.html">Work</a><a href="about.html">About</a><a href="contact.html" class="active">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="nav-ghost" onclick="location.href='contact.html'">Let's Talk</button>
+      <button class="btn-primary btn-sm" onclick="location.href='contact.html'">Get a Quote</button>
+    </div>
+    <div class="nav-hamburger" id="hamburger" onclick="toggleMenu()"><span></span><span></span><span></span></div>
+  </div>
+</header>
+<div id="mobile-menu">
+  <a href="index.html">Home</a><a href="services.html">Services</a>
+  <a href="portfolio.html">Work</a><a href="about.html">About</a><a href="contact.html" class="active">Contact</a>
+</div>
+
+<!-- PAGE HERO -->
+<section class="page-hero" style="padding:120px 0 60px;">
+  <div class="container page-hero-inner" style="text-align:center;">
+    <p class="label" style="text-align:center;">Get In Touch</p>
+    <h1 class="heading-xl" style="max-width:640px;margin:0 auto 16px;">Let's build something<br/><span class="accent-text">great together</span>.</h1>
+    <p class="body-lg" style="max-width:480px;margin:0 auto;">Send us a project brief or book a free 30-minute discovery call. We respond within 24 hours.</p>
+  </div>
+</section>
+
+<!-- CONTACT LAYOUT -->
+<div class="contact-layout">
+
+  <!-- FORM PANEL -->
+  <div class="contact-form-panel">
+    <p class="label">Project Brief</p>
+    <h2 class="heading-md" style="margin-bottom:32px;">Tell us about your project</h2>
+
+    <form id="contact-form" onsubmit="submitForm(event)">
+      <div class="form-row">
+        <div class="form-group">
+          <label for="cf-name">Your Name *</label>
+          <input id="cf-name" name="Name" type="text" placeholder="Rahul Sharma" required/>
+        </div>
+        <div class="form-group">
+          <label for="cf-email">Email Address *</label>
+          <input id="cf-email" name="Email" type="email" placeholder="rahul@company.com" required/>
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label for="cf-company">Company / Brand</label>
+          <input id="cf-company" name="Company" type="text" placeholder="Your Company Name"/>
+        </div>
+        <div class="form-group">
+          <label for="cf-phone">Phone Number</label>
+          <input id="cf-phone" name="Phone" type="tel" placeholder="+91 98765 43210"/>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="cf-service">Service You Need *</label>
+        <select id="cf-service" name="Service" required>
+          <option value="" disabled selected>Select a service...</option>
+          <option value="web">Web Design & Development</option>
+          <option value="software">Custom Software / SaaS</option>
+          <option value="ecommerce">E-commerce Store</option>
+          <option value="mobile">Mobile App</option>
+          <option value="automation">Business Automation</option>
+          <option value="uiux">UI/UX Design</option>
+          <option value="other">Not Sure Yet</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="cf-budget">Estimated Budget</label>
+        <select id="cf-budget" name="Budget">
+          <option value="" disabled selected>Select a range...</option>
+          <option value="under15">Under ₹15,000</option>
+          <option value="15-30">₹15,000 – ₹30,000</option>
+          <option value="30-80">₹30,000 – ₹80,000</option>
+          <option value="80-300">₹80,000 – ₹3,00,000</option>
+          <option value="300+">₹3,00,000+</option>
+        </select>
+      </div>
+      <div class="form-group">
+        <label for="cf-message">Project Description *</label>
+        <textarea id="cf-message" name="Message" placeholder="Tell us about your project — what it is, who it's for, what problem it solves, and any specific requirements..." required></textarea>
+      </div>
+      <button type="submit" class="btn-primary form-submit" id="cf-submit-btn">Send Project Brief →</button>
+    </form>
+
+    <div id="form-success">
+      <div class="success-icon">🎉</div>
+      <h3>Message Received!</h3>
+      <p>Thanks for reaching out. We've received your project brief and will get back to you within <strong>24 hours</strong> with an initial response and next steps.</p>
+    </div>
+
+    <!-- Info cards -->
+    <div class="info-cards">
+      <div class="info-card">
+        <div class="info-icon">📧</div>
+        <div>
+          <div class="info-label">Email Us</div>
+          <div class="info-value">hello@pixedigital.in</div>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">📱</div>
+        <div>
+          <div class="info-label">WhatsApp / Call</div>
+          <div class="info-value">+91 98765 43210</div>
+        </div>
+      </div>
+      <div class="info-card">
+        <div class="info-icon">⏱️</div>
+        <div>
+          <div class="info-label">Response Time</div>
+          <div class="info-value">Within 24 hours (usually faster)</div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- CALENDAR PANEL -->
+  <div class="contact-calendar-panel">
+    <p class="label">Schedule a Call</p>
+    <h2 class="heading-md" style="margin-bottom:24px;">Book a free 30-minute<br/>discovery call</h2>
+
+    <div class="panel-tabs">
+      <button class="panel-tab active" onclick="switchPanel('cal')">📅 Schedule</button>
+      <button class="panel-tab" onclick="switchPanel('msg')">💬 Quick Message</button>
+    </div>
+
+    <!-- CALENDAR PANEL -->
+    <div id="cal-panel">
+      <div id="cal-widget">
+        <div class="cal-header">
+          <div class="cal-month-label" id="cal-month-label">July 2025</div>
+          <div class="cal-nav">
+            <button class="cal-nav-btn" onclick="changeMonth(-1)">‹</button>
+            <button class="cal-nav-btn" onclick="changeMonth(1)">›</button>
+          </div>
+        </div>
+        <div class="cal-weekdays">
+          <div class="cal-weekday">Sun</div><div class="cal-weekday">Mon</div>
+          <div class="cal-weekday">Tue</div><div class="cal-weekday">Wed</div>
+          <div class="cal-weekday">Thu</div><div class="cal-weekday">Fri</div>
+          <div class="cal-weekday">Sat</div>
+        </div>
+        <div class="cal-days" id="cal-days"></div>
+
+        <div class="time-section" id="time-section" style="display:none;">
+          <div class="time-label" id="selected-date-label">Available slots for Mon, 7 Jul</div>
+          <div class="time-slots">
+            <div class="time-slot" onclick="selectTime(this,'10:00 AM')">10:00 AM</div>
+            <div class="time-slot" onclick="selectTime(this,'11:00 AM')">11:00 AM</div>
+            <div class="time-slot booked" title="Booked">12:00 PM</div>
+            <div class="time-slot" onclick="selectTime(this,'2:00 PM')">2:00 PM</div>
+            <div class="time-slot" onclick="selectTime(this,'3:00 PM')">3:00 PM</div>
+            <div class="time-slot" onclick="selectTime(this,'4:00 PM')">4:00 PM</div>
+            <div class="time-slot booked" title="Booked">5:00 PM</div>
+            <div class="time-slot" onclick="selectTime(this,'6:00 PM')">6:00 PM</div>
+            <div class="time-slot" onclick="selectTime(this,'7:00 PM')">7:00 PM</div>
+          </div>
+        </div>
+
+        <!-- Booking form -->
+        <div class="book-form" id="book-form">
+          <div style="height:1px;background:var(--border);margin:24px 0;"></div>
+          <p class="time-label">Your details to confirm the booking</p>
+          <div class="form-group" style="margin-top:12px;">
+            <label for="bf-name">Your Name *</label>
+            <input id="bf-name" name="Name" type="text" placeholder="Rahul Sharma" required/>
+          </div>
+          <div class="form-group">
+            <label for="bf-email">Email Address *</label>
+            <input id="bf-email" name="Email" type="email" placeholder="rahul@company.com" required/>
+          </div>
+          <div class="form-group">
+            <label for="bf-topic">What's the call about?</label>
+            <input id="bf-topic" name="Topic" type="text" placeholder="e.g. New website for my restaurant"/>
+          </div>
+          <button class="btn-primary" id="bf-submit-btn" style="width:100%;justify-content:center;margin-top:8px;" onclick="confirmBooking()">Confirm Booking →</button>
+        </div>
+      </div>
+
+      <!-- Success state -->
+      <div id="cal-success">
+        <div class="cal-success-icon">✅</div>
+        <h3>Call Booked!</h3>
+        <p>Your discovery call is confirmed for:<br/><span id="cal-booked-time"></span><br/><br/>Check your email for a calendar invite. We look forward to talking with you!</p>
+        <button class="btn-secondary" style="margin-top:24px;width:100%;justify-content:center;" onclick="resetCal()">Book Another Slot</button>
+      </div>
+    </div>
+
+    <!-- QUICK MESSAGE PANEL -->
+    <div id="msg-panel" style="display:none;">
+      <p class="body-md" style="margin-bottom:24px;">Drop us a quick message and we'll reply on WhatsApp or email — usually within a few hours.</p>
+      <div class="form-group">
+        <label for="qm-name">Name *</label>
+        <input id="qm-name" name="Name" type="text" placeholder="Your name" required/>
+      </div>
+      <div class="form-group">
+        <label for="qm-contact">Email or WhatsApp *</label>
+        <input id="qm-contact" name="Contact" type="text" placeholder="email@co.com or +91..." required/>
+      </div>
+      <div class="form-group">
+        <label for="qm-msg">Message *</label>
+        <textarea id="qm-msg" name="Message" placeholder="Hi, I need a website for my..." required style="min-height:100px;"></textarea>
+      </div>
+      <button class="btn-primary" id="qm-submit-btn" style="width:100%;justify-content:center;" onclick="sendQuickMsg()">Send Message →</button>
+      <div id="qm-success" style="display:none;text-align:center;padding:24px 0;animation:fadeUp .4s ease;">
+        <div style="font-size:40px;margin-bottom:12px;">💬</div>
+        <p style="color:var(--accent);font-family:var(--mono);font-weight:600;margin-bottom:8px;">Message Sent!</p>
+        <p class="body-md">We'll reply to you shortly.</p>
+      </div>
+    </div>
+
+    <!-- Working hours note -->
+    <div style="margin-top:32px;padding:16px 20px;border:1px solid var(--border);border-radius:2px;background:var(--surface);">
+      <p style="font-family:var(--mono);font-size:11px;color:var(--text-muted);letter-spacing:.05em;">
+        🕐 &nbsp;Working hours: <strong style="color:var(--text);">Mon–Sat, 10 AM – 7 PM IST</strong><br/>
+        All calls are held via Google Meet or Zoom.
+      </p>
+    </div>
+  </div>
+
+</div>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><div class="footer-brand-logo">PIXE</div><p>We build websites and custom software that help businesses grow faster, work smarter, and stand out digitally.</p><div class="footer-socials"><div class="social-btn">𝕏</div><div class="social-btn">in</div><div class="social-btn">✉</div></div></div>
+      <div class="footer-col"><p class="footer-col-title">Services</p><nav><a href="services.html">Web Design</a><a href="services.html">Custom Software</a><a href="services.html">Mobile Apps</a><a href="services.html">E-commerce</a><a href="services.html">Automation</a></nav></div>
+      <div class="footer-col"><p class="footer-col-title">Company</p><nav><a href="about.html">About Us</a><a href="portfolio.html">Our Work</a><a href="contact.html">Careers</a><a href="contact.html">Contact</a></nav></div>
+      <div class="footer-col"><p class="footer-col-title">Legal</p><nav><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Cookie Policy</a></nav></div>
+    </div>
+    <div class="footer-bottom"><p>© 2025 PIXE Digital. All rights reserved.</p><div class="status-dot">All systems operational</div></div>
+  </div>
+</footer>
+
+<script>
+// Header
+const hdr=document.getElementById('site-header');
+window.addEventListener('scroll',()=>hdr.classList.toggle('scrolled',window.scrollY>20),{passive:true});
+function toggleMenu(){ document.getElementById('mobile-menu').classList.toggle('open'); }
+
+// Panel tabs
+function switchPanel(p){
+  document.querySelectorAll('.panel-tab').forEach((t,i)=>t.classList.toggle('active',i===(p==='cal'?0:1)));
+  document.getElementById('cal-panel').style.display = p==='cal' ? 'block' : 'none';
+  document.getElementById('msg-panel').style.display = p==='msg' ? 'block' : 'none';
+}
+
+// Endpoint for form submissions
+const EMAIL_ENDPOINT = 'https://formsubmit.co/ajax/ratanraj9777@gmail.com';
+
+function sendEmailData(data, btnId, originalText, successCallback) {
+  const btn = document.getElementById(btnId);
+  btn.textContent = "Sending...";
+  btn.style.pointerEvents = "none";
+  
+  fetch(EMAIL_ENDPOINT, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json', 'Accept': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(res => res.json())
+  .then(() => {
+    btn.textContent = originalText;
+    btn.style.pointerEvents = "all";
+    successCallback();
+  })
+  .catch(err => {
+    console.error(err);
+    alert('Failed to send. Please try again.');
+    btn.textContent = originalText;
+    btn.style.pointerEvents = "all";
+  });
+}
+
+// Contact form
+function submitForm(e){
+  e.preventDefault();
+  const data = {
+    _subject: "New Project Brief from PIXE Website",
+    Name: document.getElementById('cf-name').value,
+    Email: document.getElementById('cf-email').value,
+    Company: document.getElementById('cf-company').value,
+    Phone: document.getElementById('cf-phone').value,
+    Service: document.getElementById('cf-service').value,
+    Budget: document.getElementById('cf-budget').value,
+    Message: document.getElementById('cf-message').value
+  };
+  
+  sendEmailData(data, 'cf-submit-btn', 'Send Project Brief →', () => {
+    document.getElementById('contact-form').style.display='none';
+    document.getElementById('form-success').style.display='block';
+  });
+}
+
+// Quick message
+function sendQuickMsg(){
+  const n=document.getElementById('qm-name').value;
+  const c=document.getElementById('qm-contact').value;
+  const m=document.getElementById('qm-msg').value;
+  if(!n||!c||!m){alert('Please fill all fields.');return;}
+  
+  const data = {
+    _subject: "New Quick Message from PIXE Website",
+    Name: n,
+    ContactInfo: c,
+    Message: m
+  };
+  
+  sendEmailData(data, 'qm-submit-btn', 'Send Message →', () => {
+    document.getElementById('msg-panel').children[1].style.display='none';
+    document.getElementById('msg-panel').children[2].style.display='none';
+    document.getElementById('msg-panel').children[3].style.display='none';
+    document.getElementById('qm-submit-btn').style.display='none';
+    document.getElementById('qm-success').style.display='block';
+  });
+}
+
+// ── CALENDAR ──
+const MONTHS=['January','February','March','April','May','June','July','August','September','October','November','December'];
+let calDate = new Date();
+let selDate = null;
+let selTime = null;
+
+function renderCalendar(){
+  const y=calDate.getFullYear(), m=calDate.getMonth();
+  document.getElementById('cal-month-label').textContent=`${MONTHS[m]} ${y}`;
+  const first=new Date(y,m,1).getDay();
+  const days=new Date(y,m+1,0).getDate();
+  const today=new Date(); today.setHours(0,0,0,0);
+  const container=document.getElementById('cal-days');
+  container.innerHTML='';
+  for(let i=0;i<first;i++){
+    const d=document.createElement('div');
+    d.className='cal-day empty'; container.appendChild(d);
+  }
+  for(let d=1;d<=days;d++){
+    const btn=document.createElement('div');
+    btn.textContent=d; btn.className='cal-day';
+    const date=new Date(y,m,d);
+    const dow=date.getDay();
+    if(date<today||dow===0) btn.classList.add('disabled');
+    if(date.toDateString()===today.toDateString()) btn.classList.add('today');
+    if(selDate&&date.toDateString()===selDate.toDateString()) btn.classList.add('selected');
+    btn.onclick=()=>{ if(!btn.classList.contains('disabled')) selectDate(date,btn); };
+    container.appendChild(btn);
+  }
+}
+
+function selectDate(date,btn){
+  selDate=date; selTime=null;
+  document.querySelectorAll('.cal-day').forEach(d=>d.classList.remove('selected'));
+  btn.classList.add('selected');
+  document.querySelectorAll('.time-slot').forEach(s=>s.classList.remove('selected'));
+  document.getElementById('book-form').classList.remove('visible');
+  const opts={weekday:'short',day:'numeric',month:'short'};
+  document.getElementById('selected-date-label').textContent=
+    `Available slots for ${date.toLocaleDateString('en-IN',opts)}`;
+  document.getElementById('time-section').style.display='block';
+}
+
+function selectTime(el,time){
+  if(el.classList.contains('booked')) return;
+  document.querySelectorAll('.time-slot').forEach(s=>s.classList.remove('selected'));
+  el.classList.add('selected');
+  selTime=time;
+  document.getElementById('book-form').classList.add('visible');
+}
+
+function changeMonth(delta){
+  calDate.setMonth(calDate.getMonth()+delta);
+  if(calDate<new Date(new Date().getFullYear(),new Date().getMonth(),1))
+    calDate=new Date();
+  selDate=null; selTime=null;
+  document.getElementById('time-section').style.display='none';
+  document.getElementById('book-form').classList.remove('visible');
+  renderCalendar();
+}
+
+function confirmBooking(){
+  const name=document.getElementById('bf-name').value;
+  const email=document.getElementById('bf-email').value;
+  const topic=document.getElementById('bf-topic').value;
+  if(!name||!email){alert('Please enter your name and email.');return;}
+  if(!selDate||!selTime){alert('Please select a date and time slot.');return;}
+  
+  const opts={weekday:'long',year:'numeric',month:'long',day:'numeric'};
+  const dateStr=selDate.toLocaleDateString('en-IN',opts);
+  
+  const data = {
+    _subject: "New Discovery Call Booking",
+    Name: name,
+    Email: email,
+    Topic: topic,
+    Date: dateStr,
+    Time: selTime
+  };
+
+  sendEmailData(data, 'bf-submit-btn', 'Confirm Booking →', () => {
+    document.getElementById('cal-booked-time').textContent=`${dateStr} at ${selTime} IST`;
+    document.getElementById('cal-widget').style.display='none';
+    document.getElementById('cal-success').style.display='block';
+  });
+}
+
+function resetCal(){
+  selDate=null; selTime=null;
+  document.getElementById('cal-widget').style.display='block';
+  document.getElementById('cal-success').style.display='none';
+  document.getElementById('time-section').style.display='none';
+  document.getElementById('book-form').classList.remove('visible');
+  document.querySelectorAll('.time-slot').forEach(s=>s.classList.remove('selected'));
+  renderCalendar();
+}
+
+// Init
+renderCalendar();
+</script>
+</body>
+</html>

@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Portfolio — PIXE | Our Work & Case Studies</title>
+  <meta name="description" content="Browse PIXE's portfolio of websites, custom software, and mobile apps built for growing businesses."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    body { padding-top: var(--nav-h); }
+
+    /* Filter tabs */
+    .filter-tabs { display:flex; gap:8px; flex-wrap:wrap; margin-bottom:48px; }
+    .filter-tab {
+      font-family:var(--mono); font-size:11px; font-weight:500;
+      letter-spacing:.12em; text-transform:uppercase;
+      background:var(--surface); color:var(--text-muted);
+      border:1px solid var(--border); padding:8px 20px; border-radius:2px;
+      cursor:pointer; transition:all .2s;
+    }
+    .filter-tab:hover, .filter-tab.active { background:var(--accent); color:#07090f; border-color:var(--accent); }
+
+    /* Portfolio grid */
+    .portfolio-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:2px; }
+    @media(max-width:768px){ .portfolio-grid{ grid-template-columns:1fr; } }
+
+    .portfolio-card {
+      position:relative; overflow:hidden; aspect-ratio:16/10;
+      background:var(--surface); cursor:pointer;
+    }
+    .portfolio-card .card-bg {
+      position:absolute; inset:0;
+      display:flex; align-items:center; justify-content:center;
+      font-size:80px; background:var(--surface-high);
+      transition:transform .5s ease;
+    }
+    .portfolio-card:hover .card-bg { transform:scale(1.05); }
+    /* Colour tints per card */
+    .portfolio-card:nth-child(1) .card-bg { background:linear-gradient(135deg,#0a1628,#0f2040); }
+    .portfolio-card:nth-child(2) .card-bg { background:linear-gradient(135deg,#0f1a10,#162416); }
+    .portfolio-card:nth-child(3) .card-bg { background:linear-gradient(135deg,#1a0a0a,#2d1010); }
+    .portfolio-card:nth-child(4) .card-bg { background:linear-gradient(135deg,#0a0f1a,#0d1525); }
+    .portfolio-card:nth-child(5) .card-bg { background:linear-gradient(135deg,#1a130a,#2a1f0d); }
+    .portfolio-card:nth-child(6) .card-bg { background:linear-gradient(135deg,#0a0a1a,#10102e); }
+
+    .portfolio-overlay {
+      position:absolute; inset:0;
+      background:linear-gradient(to top, rgba(7,9,15,.97) 0%, rgba(7,9,15,.4) 60%, transparent 100%);
+      display:flex; flex-direction:column; justify-content:flex-end;
+      padding:32px; transition:background .3s;
+    }
+    .portfolio-card:hover .portfolio-overlay { background:linear-gradient(to top, rgba(7,9,15,1) 0%, rgba(7,9,15,.75) 100%); }
+
+    .port-tag { font-family:var(--mono); font-size:10px; letter-spacing:.2em; text-transform:uppercase; color:var(--accent); margin-bottom:8px; }
+    .port-title { font-family:var(--mono); font-size:1.25rem; font-weight:700; color:var(--text); margin-bottom:8px; line-height:1.2; }
+    .port-desc { font-size:.85rem; color:var(--text-muted); line-height:1.6; margin-bottom:16px; max-width:400px; }
+
+    .port-metrics { display:flex; gap:20px; flex-wrap:wrap; margin-bottom:16px; }
+    .port-metric { font-family:var(--mono); font-size:11px; }
+    .port-metric strong { color:var(--accent); font-size:1rem; display:block; }
+    .port-metric span { color:var(--text-muted); font-size:10px; }
+
+    .port-stack { display:flex; gap:6px; flex-wrap:wrap; }
+    .port-stack-pill {
+      font-family:var(--mono); font-size:10px; color:rgba(255,255,255,.4);
+      background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.08);
+      padding:3px 10px; border-radius:2px;
+    }
+
+    .port-cta {
+      position:absolute; top:20px; right:20px;
+      font-family:var(--mono); font-size:11px; font-weight:600; letter-spacing:.1em;
+      color:var(--accent); background:rgba(0,255,224,.1); border:1px solid rgba(0,255,224,.3);
+      padding:8px 16px; border-radius:2px;
+      opacity:0; transform:translateY(-8px); transition:opacity .3s, transform .3s;
+    }
+    .portfolio-card:hover .port-cta { opacity:1; transform:translateY(0); }
+
+    /* Featured case study */
+    .case-study {
+      background:var(--surface); border:1px solid var(--border); border-radius:4px;
+      padding:56px 52px; display:grid; grid-template-columns:1fr 1fr; gap:56px; align-items:center;
+      margin-bottom:20px;
+    }
+    @media(max-width:768px){ .case-study{ grid-template-columns:1fr; padding:36px 28px; } }
+    .cs-number { font-family:var(--mono); font-size:80px; font-weight:700; color:rgba(0,255,224,.07); line-height:1; margin-bottom:-20px; }
+    .cs-title { font-family:var(--mono); font-size:clamp(1.4rem,3vw,2rem); font-weight:700; color:var(--text); margin-bottom:12px; }
+    .cs-desc { font-size:.95rem; color:var(--text-muted); line-height:1.75; margin-bottom:24px; }
+    .cs-metrics { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; border-top:1px solid var(--border); padding-top:24px; }
+    .cs-metric strong { font-family:var(--mono); font-size:1.6rem; font-weight:700; color:var(--accent); display:block; }
+    .cs-metric span { font-family:var(--mono); font-size:11px; color:var(--text-muted); letter-spacing:.08em; }
+    .cs-visual { background:var(--surface-high); border-radius:4px; aspect-ratio:4/3; display:flex; align-items:center; justify-content:center; font-size:80px; border:1px solid var(--border); }
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<header id="site-header">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">PIXE</a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="services.html">Services</a>
+      <a href="portfolio.html" class="active">Work</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="nav-ghost" onclick="location.href='contact.html'">Let's Talk</button>
+      <button class="btn-primary btn-sm" onclick="location.href='contact.html'">Get a Quote</button>
+    </div>
+    <div class="nav-hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</header>
+<div id="mobile-menu">
+  <a href="index.html">Home</a><a href="services.html">Services</a>
+  <a href="portfolio.html" class="active">Work</a><a href="about.html">About</a><a href="contact.html">Contact</a>
+</div>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="container page-hero-inner">
+    <p class="label reveal">Our Work</p>
+    <h1 class="heading-xl reveal" style="max-width:640px;margin-bottom:20px;">
+      Products we've built<br/>that <span class="accent-text">actually perform</span>.
+    </h1>
+    <p class="body-lg reveal" style="max-width:500px;">Every project here started with a problem. We turned them into solutions that drive measurable growth.</p>
+  </div>
+</section>
+
+<!-- FILTER + PORTFOLIO -->
+<section style="background:var(--bg-dim);padding:64px 0;">
+  <div class="container">
+    <div class="filter-tabs reveal">
+      <button class="filter-tab active" onclick="filterProjects('all',this)">All Projects</button>
+      <button class="filter-tab" onclick="filterProjects('web',this)">Web Design</button>
+      <button class="filter-tab" onclick="filterProjects('software',this)">Software</button>
+      <button class="filter-tab" onclick="filterProjects('ecommerce',this)">E-commerce</button>
+      <button class="filter-tab" onclick="filterProjects('mobile',this)">Mobile Apps</button>
+    </div>
+  </div>
+  <div class="portfolio-grid" id="portfolio-grid">
+
+    <div class="portfolio-card reveal" data-cat="software">
+      <div class="card-bg">📊</div>
+      <div class="portfolio-overlay">
+        <div class="port-tag">Custom Software</div>
+        <div class="port-title">FleetTrack — Fleet Management SaaS</div>
+        <div class="port-desc">Real-time GPS tracking, maintenance scheduling, and driver management platform for a logistics company with 200+ vehicles.</div>
+        <div class="port-metrics">
+          <div class="port-metric"><strong>60%</strong><span>Fuel Cost Reduction</span></div>
+          <div class="port-metric"><strong>200+</strong><span>Vehicles Managed</span></div>
+          <div class="port-metric"><strong>4 mo</strong><span>Delivery Time</span></div>
+        </div>
+        <div class="port-stack">
+          <span class="port-stack-pill">React</span><span class="port-stack-pill">Node.js</span>
+          <span class="port-stack-pill">PostgreSQL</span><span class="port-stack-pill">AWS</span>
+        </div>
+      </div>
+      <div class="port-cta">View Case Study →</div>
+    </div>
+
+    <div class="portfolio-card reveal" style="transition-delay:.08s" data-cat="ecommerce">
+      <div class="card-bg">🛒</div>
+      <div class="portfolio-overlay">
+        <div class="port-tag">E-commerce</div>
+        <div class="port-title">GreenLeaf — D2C Organic Store</div>
+        <div class="port-desc">Full Shopify store with custom product configurator, subscription model, and automated fulfilment integration for an organic food brand.</div>
+        <div class="port-metrics">
+          <div class="port-metric"><strong>3×</strong><span>Revenue in 6 months</span></div>
+          <div class="port-metric"><strong>4.1s→0.9s</strong><span>Load time</span></div>
+          <div class="port-metric"><strong>28%</strong><span>Cart Conversion</span></div>
+        </div>
+        <div class="port-stack">
+          <span class="port-stack-pill">Shopify</span><span class="port-stack-pill">Liquid</span>
+          <span class="port-stack-pill">Razorpay</span><span class="port-stack-pill">Klaviyo</span>
+        </div>
+      </div>
+      <div class="port-cta">View Case Study →</div>
+    </div>
+
+    <div class="portfolio-card reveal" style="transition-delay:.16s" data-cat="web">
+      <div class="card-bg">🏥</div>
+      <div class="portfolio-overlay">
+        <div class="port-tag">Web Design</div>
+        <div class="port-title">MediCare+ — Healthcare Clinic Portal</div>
+        <div class="port-desc">Modern website with online appointment booking, doctor profiles, and patient portal for a multi-specialty clinic chain with 8 locations.</div>
+        <div class="port-metrics">
+          <div class="port-metric"><strong>180%</strong><span>Online Bookings</span></div>
+          <div class="port-metric"><strong>8</strong><span>Clinic Locations</span></div>
+          <div class="port-metric"><strong>98</strong><span>PageSpeed Score</span></div>
+        </div>
+        <div class="port-stack">
+          <span class="port-stack-pill">Next.js</span><span class="port-stack-pill">Sanity CMS</span>
+          <span class="port-stack-pill">Vercel</span><span class="port-stack-pill">Calendly API</span>
+        </div>
+      </div>
+      <div class="port-cta">View Case Study →</div>
+    </div>
+
+    <div class="portfolio-card reveal" style="transition-delay:.24s" data-cat="mobile">
+      <div class="card-bg">🍕</div>
+      <div class="portfolio-overlay">
+        <div class="port-tag">Mobile App</div>
+        <div class="port-title">QuickBite — Restaurant Ordering App</div>
+        <div class="port-desc">Cross-platform food ordering app for a restaurant chain, with real-time order tracking, loyalty points, and kitchen display system integration.</div>
+        <div class="port-metrics">
+          <div class="port-metric"><strong>12k+</strong><span>Active Users</span></div>
+          <div class="port-metric"><strong>4.8★</strong><span>App Store Rating</span></div>
+          <div class="port-metric"><strong>40%</strong><span>Lower OpEx</span></div>
+        </div>
+        <div class="port-stack">
+          <span class="port-stack-pill">React Native</span><span class="port-stack-pill">Firebase</span>
+          <span class="port-stack-pill">Node.js</span><span class="port-stack-pill">Stripe</span>
+        </div>
+      </div>
+      <div class="port-cta">View Case Study →</div>
+    </div>
+
+    <div class="portfolio-card reveal" style="transition-delay:.32s" data-cat="software">
+      <div class="card-bg">🏗️</div>
+      <div class="portfolio-overlay">
+        <div class="port-tag">Custom Software</div>
+        <div class="port-title">BuildDesk — Construction ERP</div>
+        <div class="port-desc">End-to-end project management software for a construction company — tracking materials, labour, timelines, and financials across 30+ active sites.</div>
+        <div class="port-metrics">
+          <div class="port-metric"><strong>45%</strong><span>Project Delay Reduction</span></div>
+          <div class="port-metric"><strong>30+</strong><span>Sites Managed</span></div>
+          <div class="port-metric"><strong>₹2Cr</strong><span>Cost Saved Annually</span></div>
+        </div>
+        <div class="port-stack">
+          <span class="port-stack-pill">React</span><span class="port-stack-pill">Python</span>
+          <span class="port-stack-pill">MongoDB</span><span class="port-stack-pill">Docker</span>
+        </div>
+      </div>
+      <div class="port-cta">View Case Study →</div>
+    </div>
+
+    <div class="portfolio-card reveal" style="transition-delay:.40s" data-cat="web">
+      <div class="card-bg">💼</div>
+      <div class="portfolio-overlay">
+        <div class="port-tag">Web Design</div>
+        <div class="port-title">NovaCap — Investment Firm Website</div>
+        <div class="port-desc">Premium brand website for a Series A investment firm, with deal flow form, team showcase, and CMS-powered portfolio updates.</div>
+        <div class="port-metrics">
+          <div class="port-metric"><strong>220%</strong><span>Qualified Leads Increase</span></div>
+          <div class="port-metric"><strong>2.5s</strong><span>Avg. Time-to-Interactive</span></div>
+          <div class="port-metric"><strong>3 wk</strong><span>Turnaround</span></div>
+        </div>
+        <div class="port-stack">
+          <span class="port-stack-pill">Webflow</span><span class="port-stack-pill">Finsweet</span>
+          <span class="port-stack-pill">Lottie</span><span class="port-stack-pill">HubSpot</span>
+        </div>
+      </div>
+      <div class="port-cta">View Case Study →</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- FEATURED CASE STUDY -->
+<section style="background:var(--bg);padding:80px 0;">
+  <div class="container">
+    <div class="reveal" style="margin-bottom:40px;">
+      <p class="label">Featured Case Study</p>
+      <h2 class="heading-lg">A deeper look at <span class="accent-text">FleetTrack</span></h2>
+    </div>
+    <div class="case-study reveal">
+      <div>
+        <div class="cs-number">01</div>
+        <div class="cs-title">From spreadsheets to a real-time SaaS platform</div>
+        <p class="cs-desc">A logistics company managing 200+ vehicles was running operations on Excel sheets — losing ₹40L/year in fuel waste, maintenance delays, and driver overtime. We designed and built FleetTrack, a custom SaaS platform that automated everything in 4 months.</p>
+        <div class="cs-metrics">
+          <div class="cs-metric"><strong>60%</strong><span>FUEL SAVINGS</span></div>
+          <div class="cs-metric"><strong>4 mo</strong><span>DELIVERY</span></div>
+          <div class="cs-metric"><strong>₹40L+</strong><span>ANNUAL SAVING</span></div>
+        </div>
+      </div>
+      <div class="cs-visual">🚚</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="background:var(--bg-dim);padding:80px 0;">
+  <div class="container">
+    <div style="text-align:center;" class="reveal">
+      <p class="label">Start Your Project</p>
+      <h2 class="heading-lg" style="margin-bottom:16px;">Your project could be<br/><span class="accent-text">the next one</span> here.</h2>
+      <p class="body-lg" style="max-width:420px;margin:0 auto 40px;">We're selective about the projects we take on — so every project gets our full attention and expertise.</p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-primary" onclick="location.href='contact.html'">Start a Project →</button>
+        <button class="btn-secondary" onclick="location.href='services.html'">View Services</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand"><div class="footer-brand-logo">PIXE</div><p>We build websites and custom software that help businesses grow faster, work smarter, and stand out digitally.</p><div class="footer-socials"><div class="social-btn">𝕏</div><div class="social-btn">in</div><div class="social-btn">✉</div></div></div>
+      <div class="footer-col"><p class="footer-col-title">Services</p><nav><a href="services.html">Web Design</a><a href="services.html">Custom Software</a><a href="services.html">Mobile Apps</a><a href="services.html">E-commerce</a><a href="services.html">Automation</a></nav></div>
+      <div class="footer-col"><p class="footer-col-title">Company</p><nav><a href="about.html">About Us</a><a href="portfolio.html">Our Work</a><a href="contact.html">Careers</a><a href="contact.html">Contact</a></nav></div>
+      <div class="footer-col"><p class="footer-col-title">Legal</p><nav><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Cookie Policy</a></nav></div>
+    </div>
+    <div class="footer-bottom"><p>© 2025 PIXE Digital. All rights reserved.</p><div class="status-dot">All systems operational</div></div>
+  </div>
+</footer>
+
+<script>
+const io=new IntersectionObserver(e=>{e.forEach(x=>{if(x.isIntersecting){x.target.classList.add('visible');io.unobserve(x.target);}});},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+const hdr=document.getElementById('site-header');
+window.addEventListener('scroll',()=>hdr.classList.toggle('scrolled',window.scrollY>20),{passive:true});
+window.addEventListener('scroll',()=>{document.getElementById('progress-bar').style.width=(window.scrollY/(document.body.scrollHeight-window.innerHeight)*100)+'%';},{passive:true});
+function toggleMenu(){ document.getElementById('mobile-menu').classList.toggle('open'); }
+function filterProjects(cat,btn){
+  document.querySelectorAll('.filter-tab').forEach(t=>t.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.portfolio-card').forEach(c=>{
+    c.style.display = (cat==='all'||c.dataset.cat===cat) ? '' : 'none';
+  });
+}
+</script>
+</body>
+</html>

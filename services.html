@@ -1,0 +1,452 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Services — PIXE | Web Design & Custom Software</title>
+  <meta name="description" content="PIXE offers web design, custom software development, mobile apps, e-commerce solutions, and business automation for growing businesses."/>
+  <link rel="preconnect" href="https://fonts.googleapis.com"/>
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,500;0,600;0,700;1,400&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet"/>
+  <link rel="stylesheet" href="style.css"/>
+  <style>
+    body { padding-top: var(--nav-h); }
+
+    /* Services grid */
+    .services-grid { display:grid; grid-template-columns:repeat(2,1fr); gap:2px; }
+    @media(max-width:768px){ .services-grid{ grid-template-columns:1fr; } }
+
+    .service-card {
+      background:var(--surface); border:1px solid var(--border);
+      padding:52px 48px; position:relative; overflow:hidden;
+      transition:border-color .3s, background .3s;
+      display:flex; flex-direction:column; gap:20px;
+    }
+    .service-card:hover { border-color:var(--border-hover); background:var(--surface-high); }
+    .service-card::after {
+      content:''; position:absolute; top:0; right:0;
+      width:200px; height:200px; border-radius:50%;
+      background:radial-gradient(circle, rgba(0,255,224,.06) 0%, transparent 70%);
+      transform:translate(40%,-40%);
+      transition:opacity .3s; opacity:0;
+    }
+    .service-card:hover::after { opacity:1; }
+
+    .service-number {
+      font-family:var(--mono); font-size:11px; color:rgba(255,255,255,.15);
+      letter-spacing:.2em; text-transform:uppercase;
+    }
+    .service-icon { font-size:42px; margin-bottom:4px; }
+    .service-title {
+      font-family:var(--mono); font-size:clamp(1.2rem,2vw,1.5rem);
+      font-weight:700; color:var(--text); line-height:1.2;
+    }
+    .service-desc { font-size:.95rem; color:var(--text-muted); line-height:1.75; }
+    .service-features { list-style:none; display:flex; flex-direction:column; gap:10px; margin-top:4px; }
+    .service-features li {
+      font-family:var(--mono); font-size:12px; color:var(--text-muted);
+      display:flex; align-items:center; gap:10px;
+    }
+    .service-features li::before { content:'→'; color:var(--accent); flex-shrink:0; }
+    .service-price {
+      font-family:var(--mono); font-size:11px; color:var(--accent);
+      letter-spacing:.12em; text-transform:uppercase;
+      padding-top:20px; border-top:1px solid var(--border); margin-top:auto;
+    }
+
+    /* Pricing */
+    .pricing-grid { display:grid; grid-template-columns:repeat(3,1fr); gap:20px; }
+    @media(max-width:900px){ .pricing-grid{ grid-template-columns:1fr; } }
+
+    .pricing-card {
+      background:var(--surface); border:1px solid var(--border); border-radius:4px;
+      padding:40px 36px; display:flex; flex-direction:column; gap:0;
+      transition:border-color .3s, transform .3s;
+      position:relative;
+    }
+    .pricing-card:hover { border-color:var(--border-hover); transform:translateY(-4px); }
+    .pricing-card.featured {
+      border-color:var(--accent); background:var(--surface-high);
+    }
+    .pricing-card.featured::before {
+      content:'MOST POPULAR';
+      position:absolute; top:-1px; left:50%; transform:translateX(-50%);
+      font-family:var(--mono); font-size:10px; letter-spacing:.2em; font-weight:600;
+      background:var(--accent); color:#07090f;
+      padding:4px 16px; border-radius:0 0 4px 4px;
+    }
+    .plan-name { font-family:var(--mono); font-size:13px; font-weight:600; letter-spacing:.15em; text-transform:uppercase; color:var(--text-muted); margin-bottom:12px; }
+    .plan-price { font-family:var(--mono); font-size:clamp(2rem,4vw,2.8rem); font-weight:700; color:var(--text); line-height:1; margin-bottom:4px; }
+    .plan-price sup { font-size:.5em; vertical-align:super; }
+    .plan-price span { font-size:.45em; color:var(--text-muted); font-weight:400; }
+    .plan-desc { font-size:.85rem; color:var(--text-muted); margin-bottom:28px; line-height:1.6; }
+    .plan-divider { height:1px; background:var(--border); margin-bottom:24px; }
+    .plan-features { list-style:none; display:flex; flex-direction:column; gap:12px; flex:1; }
+    .plan-features li { font-size:.88rem; color:var(--text-muted); display:flex; align-items:center; gap:10px; }
+    .plan-features li .check { color:var(--accent); font-family:var(--mono); font-weight:700; font-size:14px; flex-shrink:0; }
+    .plan-features li .cross { color:rgba(255,255,255,.2); font-family:var(--mono); font-weight:700; flex-shrink:0; }
+    .plan-cta { margin-top:32px; }
+
+    /* Tech stack */
+    .tech-grid { display:flex; flex-wrap:wrap; gap:12px; }
+    .tech-pill {
+      font-family:var(--mono); font-size:12px; font-weight:500;
+      background:var(--surface); border:1px solid var(--border);
+      color:var(--text-muted); padding:8px 18px; border-radius:2px;
+      transition:border-color .2s, color .2s;
+    }
+    .tech-pill:hover { border-color:var(--accent); color:var(--accent); }
+
+    /* FAQ */
+    .faq-item { border-bottom:1px solid var(--border); }
+    .faq-question {
+      font-family:var(--mono); font-size:.95rem; font-weight:600; color:var(--text);
+      padding:24px 0; cursor:pointer; display:flex; justify-content:space-between; align-items:center;
+      transition:color .2s; user-select:none;
+    }
+    .faq-question:hover { color:var(--accent); }
+    .faq-icon { font-size:18px; transition:transform .3s; flex-shrink:0; }
+    .faq-answer { font-size:.9rem; color:var(--text-muted); line-height:1.8; max-height:0; overflow:hidden; transition:max-height .4s ease, padding .3s; }
+    .faq-item.open .faq-answer { max-height:300px; padding-bottom:24px; }
+    .faq-item.open .faq-icon { transform:rotate(45deg); }
+  </style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<header id="site-header">
+  <div class="nav-inner">
+    <a href="index.html" class="nav-logo">PIXE</a>
+    <nav class="nav-links">
+      <a href="index.html">Home</a>
+      <a href="services.html" class="active">Services</a>
+      <a href="portfolio.html">Work</a>
+      <a href="about.html">About</a>
+      <a href="contact.html">Contact</a>
+    </nav>
+    <div class="nav-actions">
+      <button class="nav-ghost" onclick="location.href='contact.html'">Let's Talk</button>
+      <button class="btn-primary btn-sm" onclick="location.href='contact.html'">Get a Quote</button>
+    </div>
+    <div class="nav-hamburger" id="hamburger" onclick="toggleMenu()">
+      <span></span><span></span><span></span>
+    </div>
+  </div>
+</header>
+<div id="mobile-menu">
+  <a href="index.html">Home</a>
+  <a href="services.html" class="active">Services</a>
+  <a href="portfolio.html">Work</a>
+  <a href="about.html">About</a>
+  <a href="contact.html">Contact</a>
+</div>
+
+<!-- PAGE HERO -->
+<section class="page-hero">
+  <div class="container page-hero-inner">
+    <p class="label reveal">What We Offer</p>
+    <h1 class="heading-xl reveal" style="max-width:680px;margin-bottom:20px;">
+      Everything your business<br/>needs to win <span class="accent-text">online</span>.
+    </h1>
+    <p class="body-lg reveal" style="max-width:540px;">
+      From a single landing page to a complex enterprise platform — we deliver end-to-end digital solutions that are built to perform.
+    </p>
+  </div>
+</section>
+
+<!-- SERVICES GRID -->
+<section style="background:var(--bg-dim);">
+  <div class="services-grid">
+
+    <div class="service-card reveal">
+      <div class="service-number">01</div>
+      <div class="service-icon">🌐</div>
+      <div class="service-title">Web Design &<br/>Development</div>
+      <div class="service-desc">Beautiful, fast, and conversion-focused websites designed from scratch for your brand. We build everything from marketing sites to complex portals.</div>
+      <ul class="service-features">
+        <li>Custom responsive design (mobile-first)</li>
+        <li>SEO-optimised structure & performance</li>
+        <li>WordPress, Webflow, or fully custom code</li>
+        <li>CMS integration for easy content updates</li>
+        <li>Landing pages with A/B testing support</li>
+      </ul>
+      <div class="service-price">Starting from ₹15,000</div>
+    </div>
+
+    <div class="service-card reveal" style="transition-delay:.08s">
+      <div class="service-number">02</div>
+      <div class="service-icon">⚙️</div>
+      <div class="service-title">Custom Software<br/>Development</div>
+      <div class="service-desc">Purpose-built web applications and SaaS platforms that replace spreadsheets, automate operations, and become the backbone of your business.</div>
+      <ul class="service-features">
+        <li>Admin dashboards & internal tools</li>
+        <li>SaaS product development (MVP to scale)</li>
+        <li>ERP, CRM, and inventory management systems</li>
+        <li>API design, integration & microservices</li>
+        <li>Role-based access control & multi-tenancy</li>
+      </ul>
+      <div class="service-price">Starting from ₹80,000</div>
+    </div>
+
+    <div class="service-card reveal" style="transition-delay:.16s">
+      <div class="service-number">03</div>
+      <div class="service-icon">🛒</div>
+      <div class="service-title">E-commerce<br/>Solutions</div>
+      <div class="service-desc">High-converting online stores built to sell. We set up your entire digital commerce operation, from storefront to payment gateway to order management.</div>
+      <ul class="service-features">
+        <li>Shopify, WooCommerce, or custom builds</li>
+        <li>Payment gateway integration (Razorpay, Stripe)</li>
+        <li>Inventory & order management</li>
+        <li>Product catalogue & search optimisation</li>
+        <li>Abandoned cart recovery & email flows</li>
+      </ul>
+      <div class="service-price">Starting from ₹40,000</div>
+    </div>
+
+    <div class="service-card reveal" style="transition-delay:.24s">
+      <div class="service-number">04</div>
+      <div class="service-icon">📱</div>
+      <div class="service-title">Mobile App<br/>Development</div>
+      <div class="service-desc">Cross-platform mobile apps for iOS and Android, built with React Native for maximum reach without doubling your development cost.</div>
+      <ul class="service-features">
+        <li>Cross-platform iOS & Android (React Native)</li>
+        <li>Native performance & offline capability</li>
+        <li>Push notifications & real-time updates</li>
+        <li>App Store & Play Store deployment</li>
+        <li>Backend API & cloud infrastructure</li>
+      </ul>
+      <div class="service-price">Starting from ₹1,20,000</div>
+    </div>
+
+    <div class="service-card reveal" style="transition-delay:.32s">
+      <div class="service-number">05</div>
+      <div class="service-icon">🤖</div>
+      <div class="service-title">Business Process<br/>Automation</div>
+      <div class="service-desc">We identify your repetitive manual tasks and automate them — saving your team hours every week and eliminating human error at scale.</div>
+      <ul class="service-features">
+        <li>Workflow automation (Zapier, Make, or custom)</li>
+        <li>Automated reporting & data pipelines</li>
+        <li>Email/WhatsApp notification systems</li>
+        <li>Document generation & e-signatures</li>
+        <li>CRM & accounting software integration</li>
+      </ul>
+      <div class="service-price">Starting from ₹30,000</div>
+    </div>
+
+    <div class="service-card reveal" style="transition-delay:.40s">
+      <div class="service-number">06</div>
+      <div class="service-icon">🎨</div>
+      <div class="service-title">UI/UX Design<br/>& Prototyping</div>
+      <div class="service-desc">User-centred design that looks world-class and actually works. We research, prototype, test, and iterate before a single line of code is written.</div>
+      <ul class="service-features">
+        <li>User research & persona mapping</li>
+        <li>Wireframes & interactive Figma prototypes</li>
+        <li>Design systems & component libraries</li>
+        <li>Usability testing & iteration</li>
+        <li>Brand identity & visual language</li>
+      </ul>
+      <div class="service-price">Starting from ₹20,000</div>
+    </div>
+
+  </div>
+</section>
+
+<!-- TECH STACK -->
+<section style="background:var(--bg);">
+  <div class="container section-pad">
+    <div class="reveal" style="text-align:center;margin-bottom:48px;">
+      <p class="label">Technology</p>
+      <h2 class="heading-lg" style="margin-bottom:12px;">Built with the <span class="accent-text">best tools</span></h2>
+      <p class="body-md" style="max-width:500px;margin:0 auto;">We use modern, battle-tested technologies that scale — so your product never becomes a technical liability.</p>
+    </div>
+    <div class="tech-grid reveal" style="justify-content:center;max-width:800px;margin:0 auto;">
+      <div class="tech-pill">React</div><div class="tech-pill">Next.js</div>
+      <div class="tech-pill">Node.js</div><div class="tech-pill">TypeScript</div>
+      <div class="tech-pill">React Native</div><div class="tech-pill">Python</div>
+      <div class="tech-pill">PostgreSQL</div><div class="tech-pill">MongoDB</div>
+      <div class="tech-pill">AWS</div><div class="tech-pill">Vercel</div>
+      <div class="tech-pill">Docker</div><div class="tech-pill">Figma</div>
+      <div class="tech-pill">Shopify</div><div class="tech-pill">WordPress</div>
+      <div class="tech-pill">Webflow</div><div class="tech-pill">Stripe</div>
+      <div class="tech-pill">Razorpay</div><div class="tech-pill">Firebase</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section style="background:var(--bg-dim);">
+  <div class="container section-pad">
+    <div class="reveal" style="text-align:center;margin-bottom:56px;">
+      <p class="label">Pricing</p>
+      <h2 class="heading-lg" style="margin-bottom:12px;">Transparent pricing,<br/><span class="accent-text">zero surprises</span></h2>
+      <p class="body-md" style="max-width:480px;margin:0 auto;">Every project is unique. These packages give you a starting point — we'll tailor a quote to your exact needs.</p>
+    </div>
+    <div class="pricing-grid">
+      <!-- Starter -->
+      <div class="pricing-card reveal">
+        <div class="plan-name">Starter</div>
+        <div class="plan-price"><sup>₹</sup>15,000<span>+</span></div>
+        <div class="plan-desc">Perfect for small businesses that need a professional online presence fast.</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li><span class="check">✓</span>Up to 5 custom pages</li>
+          <li><span class="check">✓</span>Mobile-responsive design</li>
+          <li><span class="check">✓</span>Basic SEO setup</li>
+          <li><span class="check">✓</span>Contact form integration</li>
+          <li><span class="check">✓</span>2 rounds of revisions</li>
+          <li><span class="check">✓</span>Delivery in 1–2 days</li>
+          <li><span class="cross">✗</span>CMS / Blog</li>
+          <li><span class="cross">✗</span>Custom backend</li>
+        </ul>
+        <div class="plan-cta">
+          <button class="btn-secondary" style="width:100%;justify-content:center;" onclick="location.href='contact.html'">Get Started</button>
+        </div>
+      </div>
+      <!-- Growth (featured) -->
+      <div class="pricing-card featured reveal" style="transition-delay:.1s">
+        <div class="plan-name">Growth</div>
+        <div class="plan-price"><sup>₹</sup>30,000<span>+</span></div>
+        <div class="plan-desc">For businesses ready to scale with a powerful website and integrated tools.</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li><span class="check">✓</span>Unlimited pages</li>
+          <li><span class="check">✓</span>Custom CMS integration</li>
+          <li><span class="check">✓</span>Advanced SEO & analytics</li>
+          <li><span class="check">✓</span>E-commerce or booking system</li>
+          <li><span class="check">✓</span>Unlimited revisions</li>
+          <li><span class="check">✓</span>Delivery in 4–6 days</li>
+          <li><span class="check">✓</span>3 months support</li>
+          <li><span class="cross">✗</span>Custom backend / API</li>
+        </ul>
+        <div class="plan-cta">
+          <button class="btn-primary" style="width:100%;justify-content:center;" onclick="location.href='contact.html'">Get Started</button>
+        </div>
+      </div>
+      <!-- Enterprise -->
+      <div class="pricing-card reveal" style="transition-delay:.2s">
+        <div class="plan-name">Enterprise</div>
+        <div class="plan-price" style="font-size:2rem;">Custom</div>
+        <div class="plan-desc">Full-scale custom software, web applications, and long-term partnership.</div>
+        <div class="plan-divider"></div>
+        <ul class="plan-features">
+          <li><span class="check">✓</span>Custom web application / SaaS</li>
+          <li><span class="check">✓</span>Mobile app (iOS + Android)</li>
+          <li><span class="check">✓</span>Dedicated project manager</li>
+          <li><span class="check">✓</span>Custom backend & API</li>
+          <li><span class="check">✓</span>User authentication & roles</li>
+          <li><span class="check">✓</span>Ongoing maintenance & support</li>
+          <li><span class="check">✓</span>CI/CD & DevOps setup</li>
+          <li><span class="check">✓</span>NDA & white-label available</li>
+        </ul>
+        <div class="plan-cta">
+          <button class="btn-secondary" style="width:100%;justify-content:center;" onclick="location.href='contact.html'">Request a Quote</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section style="background:var(--bg);">
+  <div class="container section-pad">
+    <div class="reveal" style="margin-bottom:48px;">
+      <p class="label">FAQ</p>
+      <h2 class="heading-lg">Common questions<br/>answered.</h2>
+    </div>
+    <div style="max-width:720px;" class="reveal">
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">How long does a typical project take? <span class="faq-icon">+</span></div>
+        <div class="faq-answer">A standard website takes 1–2 days (Starter) or 4–6 days (Growth). A custom software project typically takes 30–90 days depending on complexity. We always give you a detailed timeline before starting, and stick to it.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">Do you work with startups or established businesses? <span class="faq-icon">+</span></div>
+        <div class="faq-answer">Both! We've built MVPs for Day-1 startups and complex platforms for established companies with thousands of users. Our process adapts to your stage and budget.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">What do you need from me to get started? <span class="faq-icon">+</span></div>
+        <div class="faq-answer">Just a clear brief about your goals, target audience, and any design preferences. We'll handle the rest — including content strategy, design, and technical architecture.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">Do you provide ongoing support after launch? <span class="faq-icon">+</span></div>
+        <div class="faq-answer">Yes. All projects include a bug-fix period post-launch. We also offer monthly maintenance retainers that include updates, backups, performance monitoring, and priority support.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">Can I see examples of your previous work? <span class="faq-icon">+</span></div>
+        <div class="faq-answer">Absolutely! Visit our Portfolio page to see case studies with detailed breakdowns of the challenges we solved and the results we achieved for our clients.</div>
+      </div>
+      <div class="faq-item">
+        <div class="faq-question" onclick="toggleFaq(this)">How does payment work? <span class="faq-icon">+</span></div>
+        <div class="faq-answer">We typically work on a 40-40-20 milestone model: 40% to start, 40% at mid-project review, and 20% on final delivery. For smaller projects, we offer 50-50 payment terms.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section style="background:var(--bg-dim);padding:80px 0;">
+  <div class="container">
+    <div style="text-align:center;" class="reveal">
+      <p class="label">Get Started</p>
+      <h2 class="heading-lg" style="margin-bottom:16px;">Let's build your<br/><span class="accent-text">next project</span> together.</h2>
+      <p class="body-lg" style="max-width:440px;margin:0 auto 40px;">Free consultation, honest advice, and a detailed quote within 24 hours.</p>
+      <div style="display:flex;gap:16px;justify-content:center;flex-wrap:wrap;">
+        <button class="btn-primary" onclick="location.href='contact.html'">Start a Project →</button>
+        <button class="btn-secondary" onclick="location.href='contact.html'">Schedule a Call</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="container">
+    <div class="footer-grid">
+      <div class="footer-brand">
+        <div class="footer-brand-logo">PIXE</div>
+        <p>We build websites and custom software that help businesses grow faster, work smarter, and stand out digitally.</p>
+        <div class="footer-socials">
+          <div class="social-btn">𝕏</div>
+          <div class="social-btn">in</div>
+          <div class="social-btn">✉</div>
+        </div>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Services</p>
+        <nav><a href="services.html">Web Design</a><a href="services.html">Custom Software</a><a href="services.html">Mobile Apps</a><a href="services.html">E-commerce</a><a href="services.html">Automation</a></nav>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Company</p>
+        <nav><a href="about.html">About Us</a><a href="portfolio.html">Our Work</a><a href="contact.html">Careers</a><a href="contact.html">Contact</a></nav>
+      </div>
+      <div class="footer-col">
+        <p class="footer-col-title">Legal</p>
+        <nav><a href="#">Privacy Policy</a><a href="#">Terms of Service</a><a href="#">Cookie Policy</a></nav>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <p>© 2025 PIXE Digital. All rights reserved.</p>
+      <div class="status-dot">All systems operational</div>
+    </div>
+  </div>
+</footer>
+
+<script>
+// Reveal
+const io=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');io.unobserve(e.target);}});},{threshold:.08});
+document.querySelectorAll('.reveal').forEach(el=>io.observe(el));
+// Header
+const hdr=document.getElementById('site-header');
+window.addEventListener('scroll',()=>hdr.classList.toggle('scrolled',window.scrollY>20),{passive:true});
+// Progress
+window.addEventListener('scroll',()=>{
+  const prog=window.scrollY/(document.body.scrollHeight-window.innerHeight);
+  document.getElementById('progress-bar').style.width=(prog*100)+'%';
+},{passive:true});
+// Mobile menu
+function toggleMenu(){ document.getElementById('mobile-menu').classList.toggle('open'); }
+// FAQ
+function toggleFaq(el){ el.parentElement.classList.toggle('open'); }
+</script>
+</body>
+</html>
